@@ -1,0 +1,2 @@
+view.details
+view.CreatesalaryUI
