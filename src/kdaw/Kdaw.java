@@ -27,6 +27,7 @@ public class Kdaw {
             Loading loading = new Loading();
             loading.setVisible(true); 
             loading.LoadValues(); 
+           
         } catch (Exception e) {
             
         }

@@ -4,9 +4,14 @@
  */
 package view;
 
+import control.MasterReport;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.GroupLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.User;
 
@@ -126,7 +131,7 @@ public class MainUI1 extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
-        jMenuItem19 = new javax.swing.JMenuItem();
+        jMenuItem20 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Human Resource Management & Payroll System");
@@ -250,7 +255,7 @@ public class MainUI1 extends javax.swing.JFrame {
         jMenu2.setText("Reports");
         jMenu2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
-        jMenuItem16.setText("Site-Wise Total");
+        jMenuItem16.setText("Site-Wise Total Report");
         jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem16ActionPerformed(evt);
@@ -391,13 +396,13 @@ public class MainUI1 extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem12);
 
-        jMenuItem19.setText("HistoryFix");
-        jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem20.setText("Update Software");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem19ActionPerformed(evt);
+                jMenuItem20ActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem19);
+        jMenu3.add(jMenuItem20);
 
         jMenuBar1.add(jMenu3);
 
@@ -517,7 +522,7 @@ public class MainUI1 extends javax.swing.JFrame {
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         new Reportbanwise().setVisible(true);
-        
+
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
@@ -525,19 +530,34 @@ public class MainUI1 extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-        reportmaster = new Reportmaster();
-        this.pageSwitch(reportmaster);
-        
+        int i = JOptionPane.showConfirmDialog(null, "Are you Sure You want to Print the Master Report", "MASTER REPORT", JOptionPane.YES_NO_OPTION);
+        if (i == 0) {
+            Thread t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    new MasterReport().printThisInvoice();
+                }
+            });
+
+            t.start();
+        }
+
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
         new Reportcomparison().setVisible(true);
-        
+
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
-    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-    new historyfix().setVisible(true);
-    }//GEN-LAST:event_jMenuItem19ActionPerformed
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+        try {
+            Process process = Runtime.getRuntime().exec(System.getProperty("user.dir") + "/DenUpdator.exe");
+            System.exit(0);
+        } catch (IOException ex) {
+            Logger.getLogger(MainUI1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -601,8 +621,8 @@ public class MainUI1 extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
-    private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

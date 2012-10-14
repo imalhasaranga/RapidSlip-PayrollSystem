@@ -40,6 +40,7 @@ public class Loading extends javax.swing.JFrame {
                 try {
                     Login login = new Login(mainui);
                         login.setVisible(true);
+                        setVisible(false);
                     ResultSet rs = DB.getData("select * from comp_parameters where compPara_id = '1' OR compPara_id = '2'");
                     rs.next();
                     if (rs.getString("lcode").equals("kdaweera123")) {

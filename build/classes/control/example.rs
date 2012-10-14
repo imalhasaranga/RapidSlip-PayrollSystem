@@ -1,2 +1,0 @@
-control.example
-control.A

@@ -4,11 +4,17 @@
  */
 package view;
 
+import control.PrintSiteCompare;
 import control.Printcomparereport;
 import java.sql.ResultSet;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.DB;
 import model.PayRoll;
+import model.Site;
 
 /**
  *
@@ -17,11 +23,14 @@ import model.PayRoll;
 public class Reportcomparison extends javax.swing.JFrame {
 
     PayRoll payroll;
-    Printcomparereport printcomp;
+    PrintSiteCompare sitecompare;
     double total1;
     double total2;
     double compamount;
-
+    double totalamount1;
+    double totalamount2;
+    double totalcomp;
+    
     /**
      * Creates new form Reportcomparison
      */
@@ -57,6 +66,8 @@ public class Reportcomparison extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         lcompamount = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblsites = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Month Total Comparison");
@@ -125,6 +136,47 @@ public class Reportcomparison extends javax.swing.JFrame {
         lcompamount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lcompamount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        tblsites.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tblsites.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Site", "Total1", "Total2", "Comparison"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblsites.setRowHeight(19);
+        tblsites.setSelectionBackground(new java.awt.Color(102, 102, 102));
+        tblsites.setSelectionForeground(new java.awt.Color(255, 255, 204));
+        jScrollPane1.setViewportView(tblsites);
+        tblsites.getColumnModel().getColumn(1).setMinWidth(120);
+        tblsites.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tblsites.getColumnModel().getColumn(1).setMaxWidth(120);
+        tblsites.getColumnModel().getColumn(2).setMinWidth(120);
+        tblsites.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tblsites.getColumnModel().getColumn(2).setMaxWidth(120);
+        tblsites.getColumnModel().getColumn(3).setMinWidth(120);
+        tblsites.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tblsites.getColumnModel().getColumn(3).setMaxWidth(120);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -133,37 +185,32 @@ public class Reportcomparison extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ycyear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(bview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(ycyear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(6, 6, 6)
                                 .addComponent(mcmonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                                .addGap(40, 40, 40)
                                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ycyear1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(6, 6, 6)
-                                .addComponent(mcmonth1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(bprint, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(mcmonth1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(201, 201, 201))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lfmonth, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(bview, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bprint, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -173,9 +220,14 @@ public class Reportcomparison extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(127, 127, 127)
-                                .addComponent(lcompamount, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(lcompamount, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lfmonth, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,6 +242,12 @@ public class Reportcomparison extends javax.swing.JFrame {
                     .addComponent(ycyear1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mcmonth1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bview, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bprint, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -206,82 +264,215 @@ public class Reportcomparison extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lcompamount, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bview, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bprint, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-677)/2, (screenSize.height-292)/2, 677, 292);
+        setBounds((screenSize.width-679)/2, (screenSize.height-694)/2, 679, 694);
     }// </editor-fold>//GEN-END:initComponents
 
     private void bviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bviewActionPerformed
-        payroll = new PayRoll();
+        loadTable2();
 
-        try {
-            total1 = payroll.getPayrollTotal(ycyear.getYear(), mcmonth.getMonth() + 1);
-            total2 = payroll.getPayrollTotal(ycyear1.getYear(), mcmonth1.getMonth() + 1);
-
-            if (total1 > total2) {
-                compamount = total1 - total2;
-            } else if (total2 > total1) {
-                compamount = total2 - total1;
-            } else if (total1 == total2) {
-                compamount = 0.00;
-            }
-            int m1 = mcmonth.getMonth() + 1;
-            int m2 = mcmonth1.getMonth() + 1;
-
-            lfmonth.setText("" + ycyear.getYear() + "-" + m1);
-            lsmonth.setText("" + ycyear1.getYear() + "-" + m2);
-
-            lltotal.setText(formatForDouble(total1));
-            lstotal.setText(formatForDouble(total2));
-            lcompamount.setText(formatForDouble(compamount));
-
-
-        } catch (Exception e) {
-            System.out.println("Error From UI: " + e);
-            e.printStackTrace();
-        }
+//        payroll = new PayRoll();
+//
+//        try {
+//            total1 = payroll.getPayrollTotal(ycyear.getYear(), mcmonth.getMonth() + 1);
+//            total2 = payroll.getPayrollTotal(ycyear1.getYear(), mcmonth1.getMonth() + 1);
+//
+//            if (total1 > total2) {
+//                compamount = total1 - total2;
+//            } else if (total2 > total1) {
+//                compamount = total2 - total1;
+//            } else if (total1 == total2) {
+//                compamount = 0.00;
+//            }
+//            int m1 = mcmonth.getMonth() + 1;
+//            int m2 = mcmonth1.getMonth() + 1;
+//
+//            lfmonth.setText("" + ycyear.getYear() + "-" + m1);
+//            lsmonth.setText("" + ycyear1.getYear() + "-" + m2);
+//
+//            lltotal.setText(formatForDouble(total1));
+//            lstotal.setText(formatForDouble(total2));
+//            lcompamount.setText(formatForDouble(compamount));
+//
+//
+//        } catch (Exception e) {
+//            System.out.println("Error From UI: " + e);
+//            e.printStackTrace();
+//        }
 
 
 
     }//GEN-LAST:event_bviewActionPerformed
 
     private void bprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bprintActionPerformed
-        if (total1 > 0) {
-            printcomp = new Printcomparereport();
+//        if (total1 > 0) {
+//            printcomp = new Printcomparereport();
+//
+//            printcomp.setYear1(ycyear.getYear());
+//            printcomp.setYear2(ycyear1.getYear());
+//            printcomp.setMonth1(mcmonth.getMonth() + 1);
+//            printcomp.setMonth2(mcmonth1.getMonth() + 1);
+//            printcomp.setTotal1(total1);
+//            printcomp.setTotal2(total2);
+//            printcomp.setCompamount(compamount);
+//
+//            printcomp.printThisInvoice();
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Get data First!", "Warning!", 2);
+//        }
+        
+        
+        if (JOptionPane.showConfirmDialog(null, "Want to Print the Table!", "Question", 0, 3) == 0) {
+            sitecompare = new PrintSiteCompare();
+            sitecompare.setYear(ycyear.getYear());
+            sitecompare.setMonth(mcmonth.getMonth() + 1);
+            sitecompare.setYear2(ycyear1.getYear());
+            sitecompare.setMonth2(mcmonth1.getMonth() + 1);
             
-            printcomp.setYear1(ycyear.getYear());
-            printcomp.setYear2(ycyear1.getYear());
-            printcomp.setMonth1(mcmonth.getMonth()+1);
-            printcomp.setMonth2(mcmonth1.getMonth()+1);
-            printcomp.setTotal1(total1);
-            printcomp.setTotal2(total2);
-            printcomp.setCompamount(compamount);
+            Vector vecsite = new Vector();
+            Vector veccashamount = new Vector();
+            Vector vecbankamount = new Vector();
+            Vector vecamount = new Vector();
             
-            printcomp.printThisInvoice();
-        } else {
-            JOptionPane.showMessageDialog(null, "Get data First!", "Warning!", 2);
+            for (int x = 0; x < tblsites.getRowCount(); x++) {
+                vecsite.add(tblsites.getValueAt(x, 0));
+                veccashamount.add(tblsites.getValueAt(x, 1));
+                vecbankamount.add(tblsites.getValueAt(x, 2));
+                vecamount.add(tblsites.getValueAt(x, 3));
+            }
+            
+            sitecompare.setSitename(vecsite);
+            sitecompare.setCashamount(veccashamount);
+            sitecompare.setBankamount(vecbankamount);
+            sitecompare.setSiteamount(vecamount);
+            
+            sitecompare.setCashtotalamount(totalamount1);
+            sitecompare.setBanktotalamount(totalamount2);
+            sitecompare.setTotalamount(totalcomp);
+            
+            sitecompare.printThisInvoice();
         }
 
 
 
+
    }//GEN-LAST:event_bprintActionPerformed
+
+    void loadTable2() {
+        clearTable();
+        DefaultTableModel dt = (DefaultTableModel) tblsites.getModel();
+        total1 = 0.0;
+        total2 = 0.0;
+        compamount = 0.0;
+        totalamount1 = 0.0;
+        totalamount2 = 0.0;
+        totalcomp = 0.0;
+        
+        try {
+
+            ResultSet rs2 = DB.getData("SELECT * FROM site WHERE is_active = '1' AND site_ID != '26'");
+
+
+            while (rs2.next()) {
+
+                total1 = 0.0;
+                total2 = 0.0;
+                compamount = 0.0;
+
+                ResultSet rs3 = Site.getSitePayAmount2(ycyear.getYear(), mcmonth.getMonth() + 1, rs2.getInt("site_ID"));
+                ResultSet rs4 = Site.getSitePayAmount2(ycyear1.getYear(), mcmonth1.getMonth() + 1, rs2.getInt("site_ID"));
+
+                while (rs3.next()) {
+                    total1 += rs3.getDouble("PackSal");
+//                        if(rs3.getString("PayType").equals("CASH")){
+//                            cashtotal += rs3.getDouble("PackSal");
+//                            System.out.println("VAL1: " + rs3.getDouble("PackSal"));
+//                        }else if(rs3.getString("PayType").equals("BANK")){
+//                            banktotal += rs3.getDouble("PackSal");
+//                            System.out.println("VAL3: " + rs3.getDouble("PackSal"));
+//                        }
+
+                }
+
+                while (rs4.next()) {
+                    total2 += rs4.getDouble("PackSal");
+
+                }
+
+                if (total1 > total2) {
+                    compamount = total1 - total2;
+                } else if (total2 > total1) {
+                    compamount = total2 - total1;
+                } else if (total1 == total2) {
+                    compamount = 0.0;
+                }
+
+                ArrayList vec = new ArrayList();
+
+                vec.add(rs2.getString("site_location"));
+                vec.add(total1);
+                vec.add(total2);
+                vec.add(compamount);
+                dt.addRow(vec.toArray());
+                
+                totalamount1 += total1;
+                totalamount2 += total2;
+                
+                if (totalamount1 > totalamount2) {
+                    totalcomp = totalamount1 - totalamount2;
+                } else if (totalamount2 > totalamount1) {
+                    totalcomp = totalamount2 - totalamount1;
+                } else if (totalamount1 == totalamount2) {
+                    totalcomp = 0.0;
+                }
+                
+                //totalsalamount += rs3.getDouble("finaltotal");
+
+            }
+//            totalsalamount = totalcashamount + totalbankamount;
+            showValues();
+
+        } catch (Exception e) {
+            System.out.println("Error From loadTable Method: " + e);
+            e.printStackTrace();
+        }
+
+    }
+
+    void clearTable() {
+        DefaultTableModel dt = (DefaultTableModel) tblsites.getModel();
+        int rows = tblsites.getRowCount();
+        for (int x = 0; x < rows; x++) {
+            dt.removeRow(0);
+        }
+
+    }
+
+    void showValues() {
+        int m1 = mcmonth.getMonth()+1;
+        int m2 = mcmonth1.getMonth()+1;
+        
+        lfmonth.setText(ycyear.getYear() + "-" +  m1);
+        lsmonth.setText(ycyear1.getYear() + "-" +  m2);
+        
+        lltotal.setText(""+formatForDouble(totalamount1));
+        lstotal.setText(""+formatForDouble(totalamount2));
+        lcompamount.setText(""+formatForDouble(totalcomp));
+    }
 
     public String formatForDouble(double contents) {
         String newFormNo = "";
@@ -348,6 +539,7 @@ public class Reportcomparison extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lcompamount;
     private javax.swing.JLabel lfmonth;
     private javax.swing.JLabel lltotal;
@@ -355,6 +547,7 @@ public class Reportcomparison extends javax.swing.JFrame {
     private javax.swing.JLabel lstotal;
     private com.toedter.calendar.JMonthChooser mcmonth;
     private com.toedter.calendar.JMonthChooser mcmonth1;
+    private javax.swing.JTable tblsites;
     private com.toedter.calendar.JYearChooser ycyear;
     private com.toedter.calendar.JYearChooser ycyear1;
     // End of variables declaration//GEN-END:variables

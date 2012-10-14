@@ -317,7 +317,7 @@ public class Reportsitewise extends javax.swing.JFrame {
         
         try {
 
-            ResultSet rs2 = DB.getData("select * from site where is_active = '1'");
+            ResultSet rs2 = DB.getData("SELECT * FROM site WHERE is_active = '1' AND site_ID != '26'");
 
 
             while (rs2.next()) {
